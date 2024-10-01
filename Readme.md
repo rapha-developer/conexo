@@ -35,7 +35,7 @@
     <a href="#student-why">Why (por que?)</a> &nbsp;|&nbsp;
     <a href="#rocket-demo">Demo</a> &nbsp;|&nbsp;
     <a href="#desktop_computer-to-use">How to use? (Como usar)</a> &nbsp;|&nbsp;
-    <a href="#zap-conexo">About Conexo Game (Sobre)</a> &nbsp;|&nbsp;  
+    <a href="#zap-about-conexo">About Conexo Game (Sobre)</a> &nbsp;|&nbsp;  
     <a href="#hammer_and_pick-features">Features</a> &nbsp;|&nbsp;  
     <a href="#pencil-license">License</a> 
 </p>
@@ -79,7 +79,7 @@
 > ```
 > ###### 1.2 Go to the project directory (Vá para o diretório do projeto) 
 >```bash
->  cd space-flight-news-react
+>  cd conexo
 > ```
 
 <br />

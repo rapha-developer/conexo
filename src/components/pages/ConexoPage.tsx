@@ -7,14 +7,17 @@ import { delayUtil } from "../../utils/delay"
 import { answerType } from "../../types/AnswersType"
 import { ConexoAnswersSection } from "../answers/conexoAnswersSection"
 import { AttemptsHero } from "../attempts/attemptsHero"
+import { Flipped, Flipper } from "react-flip-toolkit"
 
 
 export const ConexoPage = () => {
     const location = useLocation()
     const [conexo] = useState<ConexoType>(location.state.conexo)
     const [pieces, setPieces] = useState(generateConexoPieces(conexo))
+    const [boardKeys, setBoardKeys] = useState(pieces.map((item, key) => { return key }));
     const [answers, setAnswers] = useState<answerType[]>([])
     const [attempts, setAttempts] = useState(0);
+    const answersRows = (4 - answers.length)
 
     function changeStatusPiece(pieceValue: string) {
         const itemsChoose = pieces.filter((item) => item.status === 1)
@@ -40,9 +43,6 @@ export const ConexoPage = () => {
             if (itemsFromSameGroup) {
                 // se items são iguais
                 updateStatusPieces(1, 1+groupReference)
-                
-                createAnswersObject(groupReference)
-
             } else {
                 // se items não são iguais
                 updateStatusPieces(1, 99);
@@ -51,7 +51,7 @@ export const ConexoPage = () => {
         }
 
         const itemsGroupChoose = pieces.filter((item) => item.status > 1 && item.status < 98)
-        if (itemsGroupChoose.length === 4) { removeGroupPieces() }
+        if (itemsGroupChoose.length === 4) { removeGroupPieces(itemsGroupChoose) }
     }, [pieces])
 
     async function returnPiecesToNormalStatus() {
@@ -68,14 +68,37 @@ export const ConexoPage = () => {
             }
         }))
     }
-    async function removeGroupPieces() {
-        await delayUtil(1600)
+    async function removeGroupPieces(items : {
+        id: number
+        group: number
+        status: number
+        value: string
+    }[]) {
         const itemsWithoutGroup = pieces.filter((item) => item.status === 0)
-        
-        setPieces(itemsWithoutGroup)
-    }
-    async function createAnswersObject(groupReference: number) {
+        const onlyPiecesIDFromWithoutGroup = itemsWithoutGroup.map((piece) => piece.id)
+
         await delayUtil(1600)
+        onlyPiecesIDFromWithoutGroup.unshift(
+            items[0].id,
+            items[1].id,
+            items[2].id,
+            items[3].id
+        )
+        setBoardKeys(onlyPiecesIDFromWithoutGroup)
+        await delayUtil(1000)
+        const onlyPiecesIDsToRemove = [...onlyPiecesIDFromWithoutGroup]
+        onlyPiecesIDsToRemove.shift()
+        onlyPiecesIDsToRemove.shift()
+        onlyPiecesIDsToRemove.shift()
+        onlyPiecesIDsToRemove.shift()
+        await delayUtil(800)
+        setBoardKeys(onlyPiecesIDsToRemove)
+
+        updateStatusPieces(items[0].group + 1, 100);
+        createAnswersObject(items[0].group)
+    }
+
+    function createAnswersObject(groupReference: number) {
         const answersObject: answerType[] = [...answers]
 
         const answersItem: answerType = {
@@ -100,24 +123,40 @@ export const ConexoPage = () => {
                 <div className="w-full max-w-[548px] mx-auto ">
                     <AttemptsHero attempts={attempts} />
                     <ConexoAnswersSection answers={answers} />
-                    <ul className={`grid grid-cols-4 grid-rows-4 gap-2 `}>
-                        {Array.isArray(pieces) &&
-                        pieces.length > 0 &&
-                        pieces.map((piece, key) => {
+                    <Flipper 
+                        flipKey={boardKeys.join('')}
+                        spring={{
+                            stiffness: 80,
+                            damping: 41
+                        }}
+                        staggerConfig={{
+                            default: {
+                                reverse: true,
+                                speed: 0.8
+                            },
+                        }}
+                    >
+                    <ul className={`grid grid-cols-4 grid-rows-${answersRows} gap-2 `}>
+                        {Array.isArray(boardKeys) &&
+                        boardKeys.length > 0 &&
+                        boardKeys.map((pieceKey, key) => {
                             return (
+                            <Flipped key={pieceKey} flipId={`gameItem-${pieceKey}`}>
+
                                 <li key={`pieceItem-${key}`}>
                                     <ConexoBtn 
-                                        group={piece.group}
-                                        status={piece.status}
-                                        value={piece.value}
+                                        group={pieces[pieceKey].group}
+                                        status={pieces[pieceKey].status}
+                                        value={pieces[pieceKey].value}
                                         changeStatus={changeStatusPiece}
                                     />
                                 </li>
+                            </Flipped>
                             )
                         })
                         }
-                        
                     </ul>
+                    </Flipper>
                 </div>
             </div>
         </section>

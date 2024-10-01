@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       animation: {
+        'faded': 'faded 1.2s ease-in-out forwards',
         'scaleGroup-medium': 'scaleGroup 1.6s ease-in-out forwards',
         'scaleUp-medium': 'scaleUp 1.6s ease-in-out forwards',
         'scaleDown-medium': 'scaleDown 1s ease-in-out forwards',
@@ -41,6 +42,10 @@ export default {
         'nunito': ['Nunito', 'mono', 'sans']
       },
       keyframes: {
+        faded: {
+          '0%': { opacity:'0' },
+          '100%': {opacity: '1' },
+        },
         scaleUp: {
           '0%': {transform: 'scale(.87);'},
           '50%': {transform: 'scale(1.09);'},

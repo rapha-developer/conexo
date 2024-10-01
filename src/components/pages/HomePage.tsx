@@ -4,6 +4,7 @@ import { createConexoUseCase } from "../../core/usecases/createConexoUseCase"
 import { conexoData } from "../../data/mocks/list/conexoData"
 import { ConexoRepository } from "../../data/repositories/conexoRepository"
 import { ConexoViewModel } from "../../view-models/conexoViewModel"
+import { HeroGroups } from "../hero/heroGroups"
 
 export const HomePage = () => {
     const conexoRepository = new ConexoRepository()
@@ -22,6 +23,12 @@ export const HomePage = () => {
     return (
         <section className="homepage">
             <div className="container mx-auto">
+                <HeroGroups 
+                    text="Forme 4 grupos de 4 palavras que tenham algo em comum"
+                />
+                <h3 className="mt-10 font-nunito text-2xl text-white font-semibold text-center">
+                    Escolha um dos temas abaixo para jogar:
+                </h3>
                 <div className="pt-10 flex flex-wrap gap-4 justify-center items-center w-full max-w-screen-lg mx-auto">
                     {Array.isArray(conexoList) && 
                     conexoList.length > 0 &&

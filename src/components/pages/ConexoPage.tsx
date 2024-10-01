@@ -8,13 +8,17 @@ import { answerType } from "../../types/AnswersType"
 import { ConexoAnswersSection } from "../answers/conexoAnswersSection"
 import { AttemptsHero } from "../attempts/attemptsHero"
 import { Flipped, Flipper } from "react-flip-toolkit"
+import { shuffleIds } from "../../utils/shuffle"
 
 
 export const ConexoPage = () => {
+    const idsBeforeShuffle = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    const [idsAfterShuffle] = useState<number[]>(shuffleIds(shuffleIds(idsBeforeShuffle)))
+
     const location = useLocation()
     const [conexo] = useState<ConexoType>(location.state.conexo)
     const [pieces, setPieces] = useState(generateConexoPieces(conexo))
-    const [boardKeys, setBoardKeys] = useState(pieces.map((item, key) => { return key }));
+    const [boardKeys, setBoardKeys] = useState<number[]>(idsAfterShuffle.map((item) => { return item }));
     const [answers, setAnswers] = useState<answerType[]>([])
     const [attempts, setAttempts] = useState(0);
     const answersRows = (4 - answers.length)
@@ -74,25 +78,25 @@ export const ConexoPage = () => {
         status: number
         value: string
     }[]) {
-        const itemsWithoutGroup = pieces.filter((item) => item.status === 0)
-        const onlyPiecesIDFromWithoutGroup = itemsWithoutGroup.map((piece) => piece.id)
+        const idsAreHeld = [items[0].id, items[1].id, items[2].id, items[3].id]
+        const onlyBoardKeysfromWithoutGroup = boardKeys.filter((boardItem) => !idsAreHeld.includes(boardItem))
 
         await delayUtil(1600)
-        onlyPiecesIDFromWithoutGroup.unshift(
-            items[0].id,
-            items[1].id,
-            items[2].id,
-            items[3].id
+        onlyBoardKeysfromWithoutGroup.unshift(
+            idsAreHeld[0],
+            idsAreHeld[1],
+            idsAreHeld[2],
+            idsAreHeld[3]
         )
-        setBoardKeys(onlyPiecesIDFromWithoutGroup)
+        setBoardKeys(onlyBoardKeysfromWithoutGroup)
         await delayUtil(1000)
-        const onlyPiecesIDsToRemove = [...onlyPiecesIDFromWithoutGroup]
-        onlyPiecesIDsToRemove.shift()
-        onlyPiecesIDsToRemove.shift()
-        onlyPiecesIDsToRemove.shift()
-        onlyPiecesIDsToRemove.shift()
+        const onlyBoardKeysToRemove = [...onlyBoardKeysfromWithoutGroup]
+        onlyBoardKeysToRemove.shift()
+        onlyBoardKeysToRemove.shift()
+        onlyBoardKeysToRemove.shift()
+        onlyBoardKeysToRemove.shift()
         await delayUtil(800)
-        setBoardKeys(onlyPiecesIDsToRemove)
+        setBoardKeys(onlyBoardKeysToRemove)
 
         updateStatusPieces(items[0].group + 1, 100);
         createAnswersObject(items[0].group)

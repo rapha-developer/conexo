@@ -125,6 +125,9 @@ export const ConexoPage = () => {
         <section className="homepage">
             <div className="container mx-auto">
                 <div className="w-full max-w-[548px] mx-auto ">
+                    <h1 className="font-nunito text-xl text-white font-medium text-center">
+                        Escolha 4 opções e encontre os grupos que conectam
+                    </h1>
                     <AttemptsHero attempts={attempts} />
                     <ConexoAnswersSection answers={answers} />
                     <Flipper 

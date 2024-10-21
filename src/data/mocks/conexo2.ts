@@ -24,7 +24,7 @@ export const conexoExample2: ConexoType = {
         wordFourth: "Madson"
     },
     groupFour: {
-        conexoAnswer: "Jogadores do Santos F.C do ano de 2019",
+        conexoAnswer: "Jogadores do Flamengo do ano de 2019",
         wordFirst: "gabgol",
         wordSecond: "david luiz",
         wordThird: "arrascaeta",
